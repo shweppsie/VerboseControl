@@ -62,9 +62,10 @@ class VerboseControl:
 						break
 			if cascade:
 				for i in VERBOSITY.keys():
-					# add all levels below but don't add totally silent
-					if i <= int(verbosity) and i != -1:
-						self.__add_verbosity(i)
+					if i <= int(verbosity):
+						# don't include totally silent when cascading
+						if i != -1 or verbosity == -1:
+							self.__add_verbosity(i)
 			else:
 				self.__add_verbosity(verbosity)
 		except Exception, e:
