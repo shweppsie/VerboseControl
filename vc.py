@@ -69,7 +69,6 @@ class VerboseControl:
 			else:
 				self.__add_verbosity(verbosity)
 		except Exception, e:
-			raise
 			sys.stderr.write("ERROR: Not a valid verbosity level \"%s\"\n" % str(verbosity))
 			sys.exit(1)
 
