@@ -22,8 +22,19 @@ VERBOSITY={ -1:'Totally Silent', 0:'Silent', 1:'Warning', 2:'Normal', 3:'Info', 
 STRINGS={ 0:'ERROR', 1:'WARNING', 3:'INFO', 4:'VERBOSE', 5:'DEBUG' }
 
 class VerboseControl:
-	def __init__(self,verbosity):
-		self.verbosity = verbosity
+	"""Start a new Verbose Control
+
+	Keyword arguments:
+	verbosity -- verbosity level
+	cascade -- verbosity level includes all levels below it
+	show_level -- show the filter text
+
+	"""
+	def __init__(self,verbosity=None,cascade=True,show_level=False):
+		self.clear_verbosity()
+		if verbosity != None:
+			self.add_verbosity(verbosity,cascade)
+		self.show_level = show_level
 		self.stdout = sys.__stdout__
 		sys.stdout = self
 	def __del__(self):
