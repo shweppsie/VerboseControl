@@ -96,7 +96,8 @@ class VerboseControl:
 					self.stdout.write(string)
 					return
 				return
-		self.stdout.write(string)
+		if self.__check(2):
+			self.stdout.write(string)
 		return
 
 if __name__ == "__main__":
