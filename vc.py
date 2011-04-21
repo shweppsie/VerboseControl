@@ -105,7 +105,10 @@ if __name__ == "__main__":
 		a = VerboseControl(sys.argv[1])
 	else:
 		a = VerboseControl(3)
-	print "DEBUG: test1"
-	print "INFO: test2"
-	print "SUCCESS: test3"
+	print "DEBUG: test5"
+	print "VERBOSE: test4"
+	print "INFO: test3"
+	print "normal text test2"
+	print "WARNING: test1"
+	print "ERROR: test0"
 	sys.__stdout__.write("Verbose Level: %s\n" % a.get_verbosity())
