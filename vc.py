@@ -39,30 +39,72 @@ class VerboseControl:
 		sys.stdout = self
 	def __del__(self):
 		self.close()
+	def __check(self, level):
+		if level in self.verbosity:
+			return True
+		else:
+			return False
+	def __add_verbosity(self,verbosity):
+		verbosity = int(verbosity)
+		if not verbosity in VERBOSITY.keys():
+			raise Exception()
+		self.verbosity.append(verbosity)
+
+	def add_verbosity(self, verbosity,cascade=False):
+		try:
+			try: verbosity = int(verbosity)
+			except:
+				pass
+			if type(verbosity) == type(""):
+				for k,v in VERBOSITY.items():
+					if verbosity.lower() == v.lower():
+						verbosity = k
+						break
+			if cascade:
+				for i in VERBOSITY.keys():
+					# add all levels below but don't add totally silent
+					if i <= int(verbosity) and i != -1:
+						self.__add_verbosity(i)
+			else:
+				self.__add_verbosity(verbosity)
+		except Exception, e:
+			raise
+			sys.stderr.write("ERROR: Not a valid verbosity level \"%s\"\n" % str(verbosity))
+			sys.exit(1)
+
+	def clear_verbosity(self):
+		self.verbosity = []
+	def get_verbosity(self):
+		return [ (i,VERBOSITY[i]) for i in self.verbosity ]
+	def set_show_level(self, show_level):
+		self.show_level = bool(level)
 	def close(self):
 		sys.stdout = sys.__stdout__
 	def write(self, string):
+		if self.__check(-1):
+			return
+		if string == '\n':
+			return
 		string += '\n'
-		if string.startswith("DEBUG"):
-			if (self.verbosity >= 5):
-				self.stdout.write(string)
-			return
-		elif string.startswith("INFO"):
-			if (self.verbosity >= 4):
-				self.stdout.write(string)
-			return
-		elif string.startswith("SUCCESS"):
-			if (self.verbosity >= 1):
-				self.stdout.write(string)
-			return
-		elif string == '\n' or string == '\n\n':
-			return
-		else:
-			self.stdout.write(string)
-			return
+		for i in STRINGS.keys():
+			if string.startswith(STRINGS[i]+':'):
+				if self.__check(i):
+					if not self.show_level:
+						string = string[len(STRINGS[i])+1:]
+						if string[0] == ' ':
+							string = string[1:]
+					self.stdout.write(string)
+					return
+				return
+		self.stdout.write(string)
+		return
 
 if __name__ == "__main__":
-	a = VerboseControl(3)
-	print "DEBUG"
-	print "INFO"
-	print "SUCCESS"
+	if len(sys.argv) > 1:
+		a = VerboseControl(sys.argv[1])
+	else:
+		a = VerboseControl(3)
+	print "DEBUG: test1"
+	print "INFO: test2"
+	print "SUCCESS: test3"
+	sys.__stdout__.write("Verbose Level: %s\n" % a.get_verbosity())
