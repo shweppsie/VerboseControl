@@ -37,13 +37,16 @@ class VerboseControl:
 		self.show_level = show_level
 		self.stdout = sys.__stdout__
 		sys.stdout = self
+
 	def __del__(self):
 		self.close()
+
 	def __check(self, level):
 		if level in self.verbosity:
 			return True
 		else:
 			return False
+
 	def __add_verbosity(self,verbosity):
 		verbosity = int(verbosity)
 		if not verbosity in VERBOSITY.keys():
@@ -74,12 +77,16 @@ class VerboseControl:
 
 	def clear_verbosity(self):
 		self.verbosity = []
+
 	def get_verbosity(self):
 		return [ (i,VERBOSITY[i]) for i in self.verbosity ]
+
 	def set_show_level(self, show_level):
 		self.show_level = bool(level)
+
 	def close(self):
 		sys.stdout = sys.__stdout__
+
 	def write(self, string):
 		if self.__check(-1):
 			return
